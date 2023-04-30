@@ -37,8 +37,7 @@ public class FilmController {
         int id = film.getId();
         if (films.containsKey(id)) {
             films.put(id, film);
-        }
-        else {
+        } else {
             log.info("Фильм для обновления данных не найден {}", film);
             throw new ValidationException("Фильм не найден");
         }

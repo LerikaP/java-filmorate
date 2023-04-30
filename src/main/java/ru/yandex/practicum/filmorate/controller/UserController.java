@@ -40,8 +40,7 @@ public class UserController {
         int id = user.getId();
         if (users.containsKey(id)) {
             users.put(id, user);
-        }
-        else {
+        } else {
             log.info("Пользователь для обновления данных не найден {}", user);
             throw new ValidationException("Пользователь не найден");
         }
