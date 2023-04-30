@@ -16,7 +16,7 @@ import java.util.Map;
 @Slf4j
 public class FilmController {
     private final Map<Integer, Film> films = new HashMap<>();
-    private int filmIdGenerator = 0;
+    private int filmIdGenerator = 1;
 
     @GetMapping
     public List<Film> getAllFilms() {
