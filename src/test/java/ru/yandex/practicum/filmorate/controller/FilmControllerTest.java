@@ -18,6 +18,11 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FilmControllerTest {
     private static Film film;
     private Validator validator;
+    private static final String TOO_LONG_DESCRIPTION = "Двое бандитов Винсент Вега и Джулс Винфилд ведут философские " +
+            "беседы в перерывах между разборками и решением проблем с должниками криминального босса Марселласа " +
+            "Уоллеса. В первой истории Винсент проводит незабываемый вечер с женой Марселласа Мией. Во второй " +
+            "рассказывается о боксёре Бутче Кулидже, купленном Уоллесом, чтобы сдать бой. В третьей истории Винсент " +
+            "и Джулс по нелепой случайности попадают в неприятности.";
 
     @BeforeEach
     void setUp() {
@@ -47,11 +52,7 @@ public class FilmControllerTest {
 
     @Test
     void shouldNotAddFilmWithDescriptionMoreThan200Chars() {
-        film.setDescription("Двое бандитов Винсент Вега и Джулс Винфилд ведут философские беседы в перерывах между " +
-                "разборками и решением проблем с должниками криминального босса Марселласа Уоллеса. В первой истории " +
-                "Винсент проводит незабываемый вечер с женой Марселласа Мией. Во второй рассказывается о боксёре " +
-                "Бутче Кулидже, купленном Уоллесом, чтобы сдать бой. В третьей истории Винсент и Джулс по нелепой " +
-                "случайности попадают в неприятности.");
+        film.setDescription(TOO_LONG_DESCRIPTION);
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
 
         assertEquals(violations.iterator().next().getMessage(),

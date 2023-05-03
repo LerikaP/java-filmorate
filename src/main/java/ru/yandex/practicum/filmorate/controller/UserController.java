@@ -26,11 +26,12 @@ public class UserController {
     @PostMapping
     public User addUser(@Valid @RequestBody User user) {
         log.info("Добавление пользователя {}", user);
-        user.setId(getNextFreeId());
+        int id = getNextFreeId();
+        user.setId(id);
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
-        users.put(user.getId(), user);
+        users.put(id, user);
         return user;
     }
 
@@ -41,7 +42,7 @@ public class UserController {
         if (users.containsKey(id)) {
             users.put(id, user);
         } else {
-            log.info("Пользователь для обновления данных не найден {}", user);
+            log.warn("Пользователь для обновления данных не найден {}", user);
             throw new ValidationException("Пользователь не найден");
         }
         return user;

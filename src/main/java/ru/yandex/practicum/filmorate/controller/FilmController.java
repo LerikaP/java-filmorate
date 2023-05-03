@@ -26,8 +26,9 @@ public class FilmController {
     @PostMapping
     public Film addFilm(@Valid @RequestBody Film film) {
         log.info("Добавление фильма {}", film);
-        film.setId(getNextFreeId());
-        films.put(film.getId(), film);
+        int id = getNextFreeId();
+        film.setId(id);
+        films.put(id, film);
         return film;
     }
 
@@ -38,7 +39,7 @@ public class FilmController {
         if (films.containsKey(id)) {
             films.put(id, film);
         } else {
-            log.info("Фильм для обновления данных не найден {}", film);
+            log.warn("Фильм для обновления данных не найден {}", film);
             throw new ValidationException("Фильм не найден");
         }
         return film;
