@@ -9,11 +9,12 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @Builder
 public class Film {
-    private int id;
+    private long id;
     @NotNull(message = "Название фильма не может отсутствовать")
     @NotBlank(message = "Название фильма не может быть пустым")
     private String name;
@@ -23,4 +24,5 @@ public class Film {
     private LocalDate releaseDate;
     @Positive(message = "Продолжительность фильма не может быть отрицательной")
     private int duration;
+    private Set<Long> likes;
 }

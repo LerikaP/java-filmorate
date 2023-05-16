@@ -9,11 +9,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @Builder
 public class User {
-    private int id;
+    private long id;
     @NotNull(message = "Email не может отсутствовать")
     @NotBlank(message = "Email не может быть пустым")
     @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Должен быть введен корректный email")
@@ -25,4 +26,5 @@ public class User {
     private String name;
     @PastOrPresent(message = "Дата рождения не может быть в будущем")
     private LocalDate birthday;
+    private Set<Long> friends;
 }
