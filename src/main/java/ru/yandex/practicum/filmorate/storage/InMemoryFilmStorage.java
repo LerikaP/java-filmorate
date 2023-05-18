@@ -23,7 +23,6 @@ public class InMemoryFilmStorage implements FilmStorage {
         log.info("Добавление фильма {}", film);
         long id = getNextFreeId();
         film.setId(id);
-        film.setLikes(new HashSet<>());
         films.put(id, film);
         return film;
     }
@@ -33,7 +32,6 @@ public class InMemoryFilmStorage implements FilmStorage {
         log.info("Обновление данных фильма {}", film);
         long id = film.getId();
         if (films.containsKey(id)) {
-            film.setLikes(new HashSet<>());
             films.put(id, film);
         } else {
             log.warn("Фильм для обновления данных не найден {}", film);

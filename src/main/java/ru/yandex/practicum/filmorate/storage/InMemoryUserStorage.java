@@ -23,7 +23,6 @@ public class InMemoryUserStorage implements UserStorage {
         log.info("Добавление пользователя {}", user);
         long id = getNextFreeId();
         user.setId(id);
-        user.setFriends(new HashSet<>());
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
@@ -36,7 +35,6 @@ public class InMemoryUserStorage implements UserStorage {
         log.info("Обновление данных пользователя {}", user);
         long id = user.getId();
         if (users.containsKey(id)) {
-            user.setFriends(new HashSet<>());
             users.put(id, user);
         } else {
             log.warn("Пользователь для обновления данных не найден {}", user);

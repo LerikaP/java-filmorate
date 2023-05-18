@@ -18,7 +18,7 @@ public class ErrorHandler {
     public ErrorResponse handleValidationException(final ValidationException e) {
         String eMessage = e.getMessage();
         log.error(eMessage);
-        return new ErrorResponse("Ошибка валидации полей класса", e.getMessage());
+        return new ErrorResponse("Ошибка валидации полей класса", eMessage);
     }
 
     @ExceptionHandler
@@ -26,6 +26,6 @@ public class ErrorHandler {
     public ErrorResponse handleNotFoundException(final NotFoundException e) {
         String eMessage = e.getMessage();
         log.error(eMessage);
-        return new ErrorResponse("Запрашиваемый ресурс не найден", e.getMessage());
+        return new ErrorResponse("Запрашиваемый ресурс не найден", eMessage);
     }
 }

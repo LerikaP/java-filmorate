@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -14,13 +14,9 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserService {
     private final UserStorage userStorage;
-
-    @Autowired
-    public UserService(UserStorage userStorage) {
-        this.userStorage = userStorage;
-    }
 
     public List<User> getAllUsers() {
         return userStorage.getAllUsers();
@@ -50,15 +46,11 @@ public class UserService {
         User friendUser = userStorage.getUserById(friendId);
         Set<Long> userFriendIds = user.getFriends();
         Set<Long> friendUserFriendIds = friendUser.getFriends();
-        if (user.getFriends().contains(friendId)) {
+        if (checkForRemoveFriend(user, friendUser)) {
             userFriendIds.remove(friendId);
-        } else {
-            throw new NotFoundException("Пользователь " + friendUser + " не найден в друзьях " + user);
         }
-        if (friendUserFriendIds.contains(userId)) {
+        if (checkForRemoveFriend(friendUser, user)) {
             friendUserFriendIds.remove(userId);
-        } else {
-            throw new NotFoundException("Пользователь " + user + " не найден в друзьях " + friendUser);
         }
     }
 
@@ -76,5 +68,13 @@ public class UserService {
         commonFriends.retainAll(otherUser.getFriends());
         return commonFriends.stream().map(userStorage::getUserById)
                 .collect(Collectors.toList());
+    }
+
+    private boolean checkForRemoveFriend(User user, User otherUser) {
+        if (user.getFriends().contains(otherUser.getId())) {
+            return true;
+        } else {
+            throw new NotFoundException("Пользователь " + otherUser + " не найден в друзьях " + user);
+        }
     }
 }
