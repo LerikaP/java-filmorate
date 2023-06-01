@@ -29,7 +29,7 @@ public class GenreDbStorage implements GenreStorage {
     @Override
     public Genre getGenreById(int id) {
         log.info("Получение жанра по id {}", id);
-        String sql = "SELECT * FROM genres WHERE id = ?";
+        String sql = "SELECT * FROM genres WHERE genre_id = ?";
         SqlRowSet srs = jdbcTemplate.queryForRowSet(sql, id);
         if (srs.next()) {
             return jdbcTemplate.queryForObject(sql, this::mapRowToGenre, id);
@@ -53,7 +53,7 @@ public class GenreDbStorage implements GenreStorage {
         while (srs.next()) {
             genresIds.add(srs.getInt("genre_id"));
         }
-        sql = "SELECT * FROM genres WHERE id = ?";
+        sql = "SELECT * FROM genres WHERE genre_id = ?";
         Collections.reverse(genresIds);
         for (int genreId : genresIds) {
             genres.add(jdbcTemplate.queryForObject(sql, this::mapRowToGenre, genreId));
@@ -67,7 +67,7 @@ public class GenreDbStorage implements GenreStorage {
     }
 
     private Genre mapRowToGenre(ResultSet rs, int rowNum) throws SQLException {
-        int id = rs.getInt("id");
+        int id = rs.getInt("genre_id");
         String name = rs.getString("name");
         return new Genre(id, name);
     }

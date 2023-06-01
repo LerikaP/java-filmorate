@@ -9,49 +9,38 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 @Component
 @Primary
 @Slf4j
 public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
-    private final GenreStorage genreStorage;
-    private final MpaStorage mpaStorage;
 
     @Autowired
-    public FilmDbStorage(JdbcTemplate jdbcTemplate, GenreStorage genreStorage, MpaStorage mpaStorage) {
+    public FilmDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.genreStorage = genreStorage;
-        this.mpaStorage = mpaStorage;
     }
 
     @Override
     public List<Film> getAllFilms() {
-        String sql = "SELECT * FROM FILMS";
+        String sql = "SELECT * FROM FILMS f LEFT JOIN mpa m ON m.mpa_id = f.mpa_id";
         return jdbcTemplate.query(sql, this::mapRowToFilm);
     }
 
     @Override
     public Film addFilm(Film film) {
         log.info("Добавление фильма {}", film);
-        film.setMpa(mpaStorage.getMpaById(film.getMpa().getId()));
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("FILMS")
                 .usingGeneratedKeyColumns("ID");
         film.setId(simpleJdbcInsert.executeAndReturnKey(film.toMap()).longValue());
-        for (Genre genre : film.getGenres()) {
-            genreStorage.addGenresToFilmInDb(film.getId(), genre.getId());
-        }
-        film.setGenres(genreStorage.getGenresForFilmFromDb(film.getId()));
-        return getFilmById(film.getId());
+        return film;
     }
 
     @Override
@@ -63,11 +52,6 @@ public class FilmDbStorage implements FilmStorage {
                     "duration = ?, mpa_id = ? WHERE id = ?";
             jdbcTemplate.update(sqlForFilmUpdate, film.getName(), film.getDescription(), film.getReleaseDate(),
                     film.getDuration(), film.getMpa().getId(), film.getId());
-            genreStorage.deleteFilmGenres(filmId);
-            for (Genre genre : film.getGenres()) {
-                genreStorage.addGenresToFilmInDb(film.getId(), genre.getId());
-            }
-            film.setGenres(genreStorage.getGenresForFilmFromDb(film.getId()));
         } else {
             log.warn("Фильм для обновления данных не найден {}", filmId);
             throw new NotFoundException("Фильм не найден");
@@ -79,7 +63,7 @@ public class FilmDbStorage implements FilmStorage {
     public Film getFilmById(long id) {
         log.info("Получение фильма по id {}", id);
         if (checkIfFilmIsInDb(id)) {
-            String sql = "SELECT * FROM films WHERE id = ?";
+            String sql = "SELECT * FROM films f LEFT JOIN mpa m ON m.mpa_id = f.mpa_id WHERE id = ?";
             return jdbcTemplate.queryForObject(sql, this::mapRowToFilm, id);
         } else {
             log.warn("Фильм не найден {}", id);
@@ -93,8 +77,9 @@ public class FilmDbStorage implements FilmStorage {
         String description = rs.getString("description");
         LocalDate releaseDate = rs.getDate("release_date").toLocalDate();
         int duration = rs.getInt("duration");
-        Mpa mpa = mpaStorage.getMpaById(rs.getInt("mpa_id"));
-        Set<Genre> genres = genreStorage.getGenresForFilmFromDb(id);
+        int mpaId = rs.getInt("mpa_id");
+        String mpaName = rs.getString("mpa_name");
+        Mpa mpa = new Mpa(mpaId, mpaName);
         return Film.builder()
                 .id(id)
                 .name(name)
@@ -102,7 +87,6 @@ public class FilmDbStorage implements FilmStorage {
                 .releaseDate(releaseDate)
                 .duration(duration)
                 .mpa(mpa)
-                .genres(genres)
                 .build();
     }
 

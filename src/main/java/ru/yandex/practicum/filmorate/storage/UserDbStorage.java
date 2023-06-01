@@ -67,6 +67,12 @@ public class UserDbStorage implements UserStorage {
         }
     }
 
+    public boolean checkIfUserIsInDb(long id) {
+        String sql = "SELECT * FROM users WHERE id = ?";
+        SqlRowSet srs = jdbcTemplate.queryForRowSet(sql, id);
+        return srs.next();
+    }
+
     private User mapRowToUser(ResultSet rs, int rowNum) throws SQLException {
         long id = rs.getLong("id");
         String email = rs.getString("email");
@@ -84,11 +90,5 @@ public class UserDbStorage implements UserStorage {
             user.setName(login);
         }
         return user;
-    }
-
-    protected boolean checkIfUserIsInDb(long id) {
-        String sql = "SELECT * FROM users WHERE id = ?";
-        SqlRowSet srs = jdbcTemplate.queryForRowSet(sql, id);
-        return srs.next();
     }
 }
