@@ -83,9 +83,9 @@ class FilmorateApplicationTests {
 		filmStorage.addFilm(film);
 		Optional<Film> filmOptional = Optional.ofNullable(filmStorage.getFilmById(1));
 
-		assertThat(filmOptional).
-				isPresent().
-				hasValueSatisfying(film -> {
+		assertThat(filmOptional)
+				.isPresent()
+				.hasValueSatisfying(film -> {
 					assertThat(film).hasFieldOrPropertyWithValue("id", 1L);
 					assertThat(film).hasFieldOrPropertyWithValue("name", "Криминальное чтиво");
 				}
@@ -99,9 +99,9 @@ class FilmorateApplicationTests {
 		filmStorage.updateFilm(film);
 		Optional<Film> filmOptional = Optional.ofNullable(filmStorage.getFilmById(1));
 
-		assertThat(filmOptional).
-				isPresent().
-				hasValueSatisfying(film -> {
+		assertThat(filmOptional)
+				.isPresent()
+				.hasValueSatisfying(film -> {
 					assertThat(film).hasFieldOrPropertyWithValue("id", 1L);
 					assertThat(film).hasFieldOrPropertyWithValue("name", "Новое имя");
 				}
@@ -113,9 +113,9 @@ class FilmorateApplicationTests {
 		filmStorage.addFilm(film);
 		Optional<Film> filmOptional = Optional.ofNullable(filmStorage.getFilmById(1));
 
-		assertThat(filmOptional).
-				isPresent().
-				hasValueSatisfying(film -> {
+		assertThat(filmOptional)
+				.isPresent()
+				.hasValueSatisfying(film -> {
 							assertThat(film).hasFieldOrPropertyWithValue("id", 1L);
 							assertThat(film).hasFieldOrPropertyWithValue("name", "Криминальное чтиво");
 				}
@@ -177,9 +177,9 @@ class FilmorateApplicationTests {
 		userStorage.addUser(user);
 		Optional<User> userOptional = Optional.ofNullable(userStorage.getUserById(1));
 
-		assertThat(userOptional).
-				isPresent().
-				hasValueSatisfying(user -> {
+		assertThat(userOptional)
+				.isPresent()
+				.hasValueSatisfying(user -> {
 							assertThat(user).hasFieldOrPropertyWithValue("id", 1L);
 							assertThat(user).hasFieldOrPropertyWithValue("login", "Kinokritik");
 				}
@@ -193,9 +193,9 @@ class FilmorateApplicationTests {
 		userStorage.updateUser(user);
 		Optional<User> userOptional = Optional.ofNullable(userStorage.getUserById(1));
 
-		assertThat(userOptional).
-				isPresent().
-				hasValueSatisfying(user -> {
+		assertThat(userOptional)
+				.isPresent()
+				.hasValueSatisfying(user -> {
 							assertThat(user).hasFieldOrPropertyWithValue("id", 1L);
 							assertThat(user).hasFieldOrPropertyWithValue("name", "Новое имя");
 				}
@@ -207,9 +207,9 @@ class FilmorateApplicationTests {
 		userStorage.addUser(user);
 		Optional<User> userOptional = Optional.ofNullable(userStorage.getUserById(1));
 
-		assertThat(userOptional).
-				isPresent().
-				hasValueSatisfying(user -> {
+		assertThat(userOptional)
+				.isPresent()
+				.hasValueSatisfying(user -> {
 							assertThat(user).hasFieldOrPropertyWithValue("id", 1L);
 							assertThat(user).hasFieldOrPropertyWithValue("name", "Todd");
 				}
